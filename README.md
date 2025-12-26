@@ -1,4 +1,4 @@
-# ✨ Skincare Routine Builder
+# Skincare Routine Builder
 
 A web app that helps you build the perfect AM & PM skincare routine with ingredient conflict detection.
 
@@ -8,11 +8,11 @@ A web app that helps you build the perfect AM & PM skincare routine with ingredi
 
 ## Features
 
-- 🧴 **Add Products** - Input your skincare products and their active ingredients
-- ⚠️ **Conflict Detection** - Automatically detects ingredient combinations that shouldn't be used together
-- ☀️ **AM Routine** - Generates your optimized morning routine in the correct order
-- 🌙 **PM Routine** - Generates your optimized evening routine in the correct order
-- ⏱️ **Wait Times** - Shows recommended wait times between active ingredients
+- **Add Products** - Input your skincare products and their active ingredients
+- **Conflict Detection** - Automatically detects ingredient combinations that shouldn't be used together
+- **AM Routine** - Generates your optimized morning routine in the correct order
+- **PM Routine** - Generates your optimized evening routine in the correct order
+- **Wait Times** - Shows recommended wait times between active ingredients
 
 ## Ingredients Supported
 
