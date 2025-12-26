@@ -1,0 +1,110 @@
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom right, #fce7f3, #f3e8ff);
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+.add-product {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.ingredients-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.ingredient-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background: #e5e7eb;
+    cursor: pointer;
+}
+
+.ingredient-btn.selected {
+    background: #a855f7;
+    color: white;
+}
+
+button {
+    padding: 10px 20px;
+    background: #a855f7;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #9333ea;
+}
+
+#productList, #conflicts {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.routines {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.routine {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.conflict {
+    background: #fee;
+    border: 1px solid #fcc;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.routine-item {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    align-items: start;
+}
+
+.step-number {
+    background: #a855f7;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
