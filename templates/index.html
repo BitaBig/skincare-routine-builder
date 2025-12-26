@@ -10,26 +10,32 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
+                        sans: ['Josefin Sans', 'sans-serif'],
                     },
                     colors: {
-                        rose: {
-                            50: '#fff1f2',
-                            100: '#ffe4e6',
-                            200: '#fecdd3',
-                            300: '#fda4af',
-                            400: '#fb7185',
-                            500: '#f43f5e',
-                            600: '#e11d48',
+                        sand: {
+                            50: '#fdfcfb',
+                            100: '#f5f3f0',
+                            200: '#e8e4de',
+                            300: '#d4cdc3',
+                            400: '#b8ad9e',
+                            500: '#9c8e7c',
+                            600: '#7a6d5d',
                         },
-                        lavender: {
-                            50: '#faf5ff',
-                            100: '#f3e8ff',
-                            200: '#e9d5ff',
-                            300: '#d8b4fe',
-                            400: '#c084fc',
-                            500: '#a855f7',
-                            600: '#9333ea',
+                        taupe: {
+                            50: '#f9f8f6',
+                            100: '#f0eeea',
+                            200: '#e0dbd4',
+                            300: '#c9c1b5',
+                            400: '#a89d8d',
+                            500: '#8a7d6b',
+                            600: '#6b5f4f',
+                            700: '#4a4238',
+                        },
+                        cream: {
+                            50: '#fffefb',
+                            100: '#fefcf6',
+                            200: '#faf6ed',
                         }
                     }
                 }
@@ -38,31 +44,31 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Outfit', sans-serif; }
+        body, h1, h2, h3 { font-family: 'Josefin Sans', sans-serif; }
         .ingredient-btn.selected {
-            background: linear-gradient(135deg, #7c6df1 0%, #6d23a9 100%);
+            background: linear-gradient(135deg, #8a7d6b 0%, #6b5f4f 100%);
             color: white;
             transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+            box-shadow: 0 4px 15px rgba(107, 95, 79, 0.3);
         }
     </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-rose-100 via-lavender-50 to-lavender-100">
+<body class="min-h-screen bg-gradient-to-br from-cream-100 via-sand-100 to-taupe-100">
     <div class="max-w-5xl mx-auto px-6 py-12">
         <!-- Header -->
         <div class="text-center mb-12">
-            <h1 class="text-5xl font-bold bg-gradient-to-r from-rose-500 to-lavender-500 bg-clip-text text-transparent mb-3">
-                ✨ Skincare Routine Builder
+            <h1 class="text-6xl font-semibold text-taupe-700 mb-3 tracking-wide">
+                Skincare Routine Builder
             </h1>
-            <p class="text-gray-500 text-lg">Build your perfect AM & PM routine with ingredient conflict detection</p>
+            <p class="text-taupe-500 text-lg font-light tracking-wide">Build your perfect AM & PM routine with ingredient conflict detection</p>
         </div>
         
         <!-- Add Product Card -->
-        <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl shadow-lavender-200/50 p-8 mb-8 border border-white/50">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-                <span class="w-8 h-8 bg-gradient-to-br from-rose-400 to-lavender-500 rounded-lg flex items-center justify-center text-white text-sm">+</span>
+        <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl shadow-taupe-200/30 p-8 mb-8 border border-sand-200">
+            <h2 class="text-3xl font-medium text-taupe-700 mb-6 flex items-center gap-3">
+                <span class="w-10 h-10 bg-gradient-to-br from-taupe-400 to-taupe-600 rounded-full flex items-center justify-center text-white text-lg">+</span>
                 Add Your Product
             </h2>
             
@@ -70,15 +76,15 @@
                 type="text" 
                 id="productName" 
                 placeholder="Enter product name (e.g., CeraVe Moisturizer)"
-                class="w-full px-5 py-4 rounded-2xl border-2 border-lavender-100 focus:border-lavender-400 focus:outline-none transition-all text-gray-700 placeholder-gray-400 mb-6 bg-white/50"
+                class="w-full px-5 py-4 rounded-xl border-2 border-sand-200 focus:border-taupe-400 focus:outline-none transition-all text-taupe-700 placeholder-taupe-400 mb-6 bg-cream-50/50 font-light"
             >
             
-            <h3 class="text-lg font-medium text-gray-700 mb-4">Select Ingredients</h3>
+            <h3 class="text-xl font-medium text-taupe-600 mb-4">Select Ingredients</h3>
             <div class="flex flex-wrap gap-3 mb-8">
                 {% for ingredient in ingredients %}
                 <button 
                     type="button" 
-                    class="ingredient-btn px-5 py-2.5 rounded-full bg-gray-100 hover:bg-lavender-100 text-gray-700 font-medium transition-all duration-200 border-2 border-transparent hover:border-lavender-200"
+                    class="ingredient-btn px-5 py-2.5 rounded-full bg-sand-100 hover:bg-sand-200 text-taupe-600 font-medium transition-all duration-200 border border-sand-200 hover:border-taupe-300"
                     data-ingredient="{{ ingredient }}"
                 >
                     {{ ingredient }}
@@ -88,7 +94,7 @@
             
             <button 
                 id="addProduct"
-                class="w-full py-4 rounded-2xl bg-gradient-to-r from-rose-500 to-lavender-500 hover:from-rose-600 hover:to-lavender-600 text-white font-semibold text-lg transition-all duration-200 shadow-lg shadow-lavender-300/50 hover:shadow-xl hover:shadow-lavender-400/50 hover:-translate-y-0.5"
+                class="w-full py-4 rounded-xl bg-gradient-to-r from-taupe-500 to-taupe-600 hover:from-taupe-600 hover:to-taupe-700 text-white font-semibold text-lg transition-all duration-200 shadow-lg shadow-taupe-300/40 hover:shadow-xl hover:-translate-y-0.5 tracking-wide"
             >
                 + Add Product to Routine
             </button>
@@ -103,17 +109,17 @@
         <!-- Routines Grid -->
         <div class="grid md:grid-cols-2 gap-6">
             <!-- AM Routine -->
-            <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-3xl shadow-lg p-8 border border-amber-100/50">
-                <h2 class="text-2xl font-semibold text-amber-800 mb-6 flex items-center gap-3">
-                    <span class="text-3xl">☀️</span> Morning Routine
+            <div class="bg-gradient-to-br from-cream-50 to-sand-100 rounded-2xl shadow-lg p-8 border border-sand-200">
+                <h2 class="text-3xl font-medium text-taupe-700 mb-6 flex items-center gap-3">
+                    <span class="text-3xl"></span> Morning Routine
                 </h2>
                 <div id="amRoutine" class="space-y-4"></div>
             </div>
             
             <!-- PM Routine -->
-            <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl shadow-lg p-8 border border-indigo-100/50">
-                <h2 class="text-2xl font-semibold text-indigo-800 mb-6 flex items-center gap-3">
-                    <span class="text-3xl">🌙</span> Evening Routine
+            <div class="bg-gradient-to-br from-taupe-50 to-sand-100 rounded-2xl shadow-lg p-8 border border-taupe-200">
+                <h2 class="text-3xl font-medium text-taupe-700 mb-6 flex items-center gap-3">
+                    <span class="text-3xl"></span> Evening Routine
                 </h2>
                 <div id="pmRoutine" class="space-y-4"></div>
             </div>

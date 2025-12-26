@@ -46,8 +46,8 @@ function displayProducts() {
     }
     
     list.innerHTML = `
-        <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg p-8 border border-white/50">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+        <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-sand-200">
+            <h2 class="text-3xl font-medium text-taupe-700 mb-6 flex items-center gap-3">
                 <span class="text-2xl">🧴</span> Your Products
             </h2>
             <div class="space-y-4" id="productItems"></div>
@@ -58,15 +58,15 @@ function displayProducts() {
     
     products.forEach((product, index) => {
         const div = document.createElement('div');
-        div.className = 'flex items-center justify-between p-4 bg-gradient-to-r from-lavender-50 to-rose-50 rounded-2xl border border-lavender-100';
+        div.className = 'flex items-center justify-between p-4 bg-gradient-to-r from-sand-50 to-cream-100 rounded-xl border border-sand-200';
         div.innerHTML = `
             <div>
-                <h3 class="font-semibold text-gray-800">${product.name}</h3>
-                <p class="text-sm text-gray-500 mt-1">${product.ingredients.join(' • ')}</p>
+                <h3 class="font-semibold text-taupe-700">${product.name}</h3>
+                <p class="text-sm text-taupe-500 mt-1">${product.ingredients.join(' • ')}</p>
             </div>
             <button 
                 onclick="removeProduct(${index})" 
-                class="px-4 py-2 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-600 font-medium transition-colors"
+                class="px-4 py-2 rounded-lg bg-sand-200 hover:bg-sand-300 text-taupe-600 font-medium transition-colors"
             >
                 Remove
             </button>
@@ -84,8 +84,8 @@ function removeProduct(index) {
 async function analyzeRoutine() {
     if (products.length === 0) {
         document.getElementById('conflicts').innerHTML = '';
-        document.getElementById('amRoutine').innerHTML = '<p class="text-gray-400 text-center py-8">Add products to see your routine</p>';
-        document.getElementById('pmRoutine').innerHTML = '<p class="text-gray-400 text-center py-8">Add products to see your routine</p>';
+        document.getElementById('amRoutine').innerHTML = '<p class="text-taupe-400 text-center py-8 font-light">Add products to see your routine</p>';
+        document.getElementById('pmRoutine').innerHTML = '<p class="text-taupe-400 text-center py-8 font-light">Add products to see your routine</p>';
         return;
     }
     
@@ -101,8 +101,8 @@ async function analyzeRoutine() {
     const conflictsDiv = document.getElementById('conflicts');
     if (data.conflicts.length > 0) {
         conflictsDiv.innerHTML = `
-            <div class="bg-rose-50 rounded-3xl shadow-lg p-8 border border-rose-200">
-                <h2 class="text-2xl font-semibold text-rose-700 mb-6 flex items-center gap-2">
+            <div class="bg-amber-50/80 rounded-2xl shadow-lg p-8 border border-amber-200">
+                <h2 class="text-3xl font-medium text-amber-800 mb-6 flex items-center gap-3" style="font-family: 'Cormorant Garamond', serif;">
                     <span class="text-2xl">⚠️</span> Conflicts Detected
                 </h2>
                 <div class="space-y-4" id="conflictItems"></div>
@@ -112,20 +112,20 @@ async function analyzeRoutine() {
         const conflictItems = document.getElementById('conflictItems');
         data.conflicts.forEach(conflict => {
             const div = document.createElement('div');
-            div.className = 'p-4 bg-white rounded-2xl border border-rose-200';
+            div.className = 'p-4 bg-white/80 rounded-xl border border-amber-200';
             
             const severityColors = {
-                high: 'bg-rose-500',
+                high: 'bg-amber-600',
                 medium: 'bg-amber-500',
-                low: 'bg-yellow-400'
+                low: 'bg-amber-400'
             };
             
             div.innerHTML = `
                 <div class="flex items-start gap-3">
-                    <span class="w-2 h-2 rounded-full ${severityColors[conflict.severity] || 'bg-rose-500'} mt-2 flex-shrink-0"></span>
+                    <span class="w-2 h-2 rounded-full ${severityColors[conflict.severity] || 'bg-amber-500'} mt-2 flex-shrink-0"></span>
                     <div>
-                        <p class="font-semibold text-gray-800">${conflict.pair[0]} + ${conflict.pair[1]}</p>
-                        <p class="text-gray-600 text-sm mt-1">${conflict.reason}</p>
+                        <p class="font-semibold text-taupe-700">${conflict.pair[0]} + ${conflict.pair[1]}</p>
+                        <p class="text-taupe-600 text-sm mt-1 font-light">${conflict.reason}</p>
                     </div>
                 </div>
             `;
@@ -144,7 +144,7 @@ function displayRoutine(elementId, routine) {
     const div = document.getElementById(elementId);
     
     if (routine.length === 0) {
-        div.innerHTML = '<p class="text-gray-400 text-center py-8">No products for this routine</p>';
+        div.innerHTML = '<p class="text-taupe-400 text-center py-8 font-light">No products for this routine</p>';
         return;
     }
     
@@ -152,15 +152,15 @@ function displayRoutine(elementId, routine) {
     
     routine.forEach((item, index) => {
         const itemDiv = document.createElement('div');
-        itemDiv.className = 'flex items-start gap-4 p-4 bg-white/60 rounded-2xl';
+        itemDiv.className = 'flex items-start gap-4 p-4 bg-white/60 rounded-xl border border-sand-200';
         itemDiv.innerHTML = `
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-rose-400 to-lavender-500 flex items-center justify-center text-white font-bold flex-shrink-0">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-taupe-400 to-taupe-600 flex items-center justify-center text-white font-bold flex-shrink-0">
                 ${index + 1}
             </div>
             <div class="flex-1">
-                <p class="font-semibold text-gray-800">${item.ingredient}</p>
-                <p class="text-sm text-gray-500">${item.product}</p>
-                ${item.wait > 0 ? `<p class="text-xs text-lavender-600 mt-1 font-medium">⏱️ Wait ${item.wait} minutes before next step</p>` : ''}
+                <p class="font-semibold text-taupe-700">${item.ingredient}</p>
+                <p class="text-sm text-taupe-500 font-light">${item.product}</p>
+                ${item.wait > 0 ? `<p class="text-xs text-taupe-600 mt-1 font-medium">⏱️ Wait ${item.wait} minutes before next step</p>` : ''}
             </div>
         `;
         div.appendChild(itemDiv);

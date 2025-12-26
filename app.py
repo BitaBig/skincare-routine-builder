@@ -35,6 +35,21 @@ CONFLICTS = [
         'reason': 'Benzoyl peroxide can oxidize retinol, making it less effective.',
         'severity': 'high'
     },
+    {
+        'pair': ['BHA (Salicylic Acid)', 'Benzoyl Peroxide'],
+        'reason': 'Mixing acids on the same night can cause irritation and dryness. Alternate nights instead.',
+        'severity': 'high'
+    },
+    {
+        'pair': ['AHA (Glycolic Acid)', 'Benzoyl Peroxide'],
+        'reason': 'Using multiple acids together can over-exfoliate and damage skin barrier.',
+        'severity': 'high'
+    },
+    {
+        'pair': ['AHA (Glycolic Acid)', 'BHA (Salicylic Acid)'],
+        'reason': 'Layering AHA and BHA together can be too harsh. Use on alternate nights.',
+        'severity': 'medium'
+    },
 ]
 
 @app.route('/')
