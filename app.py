@@ -7,6 +7,7 @@ INGREDIENTS = {
     'Niacinamide': {'type': 'active', 'time': 'Both', 'order': 3, 'wait': 0},
     'AHA (Glycolic Acid)': {'type': 'active', 'time': 'PM', 'order': 3, 'wait': 10},
     'BHA (Salicylic Acid)': {'type': 'active', 'time': 'Both', 'order': 3, 'wait': 10},
+    'Azelaic Acid': {'type': 'active', 'time': 'Both', 'order': 3, 'wait': 5},
     'Hyaluronic Acid': {'type': 'hydrator', 'time': 'Both', 'order': 2, 'wait': 0},
     'Benzoyl Peroxide': {'type': 'active', 'time': 'Both', 'order': 4, 'wait': 5},
     'SPF': {'type': 'protection', 'time': 'AM', 'order': 6, 'wait': 0},
@@ -49,6 +50,31 @@ CONFLICTS = [
         'pair': ['AHA (Glycolic Acid)', 'BHA (Salicylic Acid)'],
         'reason': 'Layering AHA and BHA together can be too harsh. Use on alternate nights.',
         'severity': 'medium'
+    },
+    {
+        'pair': ['Azelaic Acid', 'AHA (Glycolic Acid)'],
+        'reason': 'Using multiple acids together can irritate skin. Alternate nights for best results.',
+        'severity': 'medium'
+    },
+    {
+        'pair': ['Azelaic Acid', 'BHA (Salicylic Acid)'],
+        'reason': 'Combining acids can cause dryness and sensitivity. Use on separate nights.',
+        'severity': 'medium'
+    },
+    {
+        'pair': ['Azelaic Acid', 'Retinol'],
+        'reason': 'Both are potent actives. Start by alternating nights to avoid irritation.',
+        'severity': 'medium'
+    },
+    {
+        'pair': ['Azelaic Acid', 'Benzoyl Peroxide'],
+        'reason': 'Can be too drying when layered together. Use at different times of day.',
+        'severity': 'medium'
+    },
+    {
+        'pair': ['Azelaic Acid', 'Vitamin C'],
+        'reason': 'Both are acidic and may reduce effectiveness. Use Vitamin C in AM, Azelaic Acid in PM.',
+        'severity': 'low'
     },
 ]
 
