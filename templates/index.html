@@ -72,12 +72,16 @@
                 Add Your Products
             </h2>
             
-            <input 
-                type="text" 
-                id="productName" 
-                placeholder="Enter the product name (e.g., CeraVe Moisturizer)"
-                class="w-full px-5 py-4 rounded-xl border-2 border-sand-200 focus:border-taupe-400 focus:outline-none transition-all text-taupe-700 placeholder-taupe-400 mb-6 bg-cream-50/50 font-light"
-            >
+            <div class="relative mb-6">
+                <input 
+                    type="text" 
+                    id="productName" 
+                    placeholder="Enter the product name (e.g., CeraVe Moisturizer)"
+                    class="w-full px-5 py-4 rounded-xl border-2 border-sand-200 focus:border-taupe-400 focus:outline-none transition-all text-taupe-700 placeholder-taupe-400 bg-cream-50/50 font-light"
+                    autocomplete="off"
+                >
+                <div id="autocomplete-list" class="absolute z-10 bg-white rounded-xl shadow-lg border border-sand-200 w-full max-h-48 overflow-y-auto hidden mt-1"></div>
+            </div>
             
             <h3 class="text-xl font-medium text-taupe-600 mb-4">Select Ingredients</h3>
             <div class="flex flex-wrap gap-3 mb-8">

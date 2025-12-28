@@ -6,10 +6,10 @@ INGREDIENTS = {
     'Retinol': {'type': 'active', 'time': 'PM', 'order': 4, 'wait': 20},
     'Niacinamide': {'type': 'active', 'time': 'Both', 'order': 3, 'wait': 0},
     'AHA (Glycolic Acid)': {'type': 'active', 'time': 'PM', 'order': 3, 'wait': 10},
-    'BHA (Salicylic Acid)': {'type': 'active', 'time': 'Both', 'order': 3, 'wait': 10},
-    'Azelaic Acid': {'type': 'active', 'time': 'Both', 'order': 3, 'wait': 5},
+    'BHA (Salicylic Acid)': {'type': 'active', 'time': 'PM', 'order': 3, 'wait': 10},
+    'Azelaic Acid': {'type': 'active', 'time': 'PM', 'order': 3, 'wait': 5},
     'Hyaluronic Acid': {'type': 'hydrator', 'time': 'Both', 'order': 2, 'wait': 0},
-    'Benzoyl Peroxide': {'type': 'active', 'time': 'Both', 'order': 4, 'wait': 5},
+    'Benzoyl Peroxide': {'type': 'active', 'time': 'PM', 'order': 4, 'wait': 5},
     'SPF': {'type': 'protection', 'time': 'AM', 'order': 6, 'wait': 0},
     'Moisturizer': {'type': 'hydrator', 'time': 'Both', 'order': 5, 'wait': 0},
     'Cleanser': {'type': 'cleanser', 'time': 'Both', 'order': 1, 'wait': 0},
@@ -98,9 +98,9 @@ def analyze():
         if conflict['pair'][0] in all_ingredients and conflict['pair'][1] in all_ingredients:
             conflicts.append(conflict)
     
-    # Build routines
-    am_routine = build_routine(products, 'AM')
-    pm_routine = build_routine(products, 'PM')
+    # Build routines with conflict info
+    am_routine = build_routine(products, 'AM', conflicts)
+    pm_routine = build_routine(products, 'PM', conflicts)
     
     return jsonify({
         'conflicts': conflicts,
@@ -108,19 +108,37 @@ def analyze():
         'pm_routine': pm_routine
     })
 
-def build_routine(products, time_of_day):
+def build_routine(products, time_of_day, conflicts):
     items = []
+    routine_ingredients = []
+    
     for product in products:
         for ingredient in product['ingredients']:
             if ingredient in INGREDIENTS:
                 info = INGREDIENTS[ingredient]
                 if info['time'] == time_of_day or info['time'] == 'Both':
+                    routine_ingredients.append(ingredient)
                     items.append({
                         'product': product['name'],
                         'ingredient': ingredient,
                         'order': info['order'],
-                        'wait': info['wait']
+                        'wait': info['wait'],
+                        'alternate': False,
+                        'conflicts_with': []
                     })
+    
+    # Check which ingredients in this routine have conflicts with each other
+    for item in items:
+        for conflict in conflicts:
+            pair = conflict['pair']
+            if item['ingredient'] in pair:
+                # Find the other ingredient in the conflict
+                other = pair[1] if pair[0] == item['ingredient'] else pair[0]
+                # Check if the other ingredient is also in this routine
+                if other in routine_ingredients:
+                    item['alternate'] = True
+                    if other not in item['conflicts_with']:
+                        item['conflicts_with'].append(other)
     
     # Sort by order
     items.sort(key=lambda x: x['order'])

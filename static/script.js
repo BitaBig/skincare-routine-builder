@@ -1,6 +1,139 @@
 let products = [];
 let selectedIngredients = [];
 
+// ===== AUTOCOMPLETE FUNCTIONALITY =====
+
+// Debounce function to limit API calls
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
+
+// Small fallback list for common products that APIs might miss
+const FALLBACK_PRODUCTS = [
+    "CeraVe Moisturizing Cream", "CeraVe Hydrating Cleanser", "CeraVe PM Lotion",
+    "The Ordinary Niacinamide 10%", "The Ordinary Retinol 0.5%", "The Ordinary Hyaluronic Acid",
+    "COSRX Snail Mucin Essence", "COSRX BHA Blackhead Power Liquid",
+    "Beauty of Joseon Glow Serum", "Beauty of Joseon Relief Sun",
+    "Laneige Water Sleeping Mask", "Klairs Supple Preparation Toner",
+    "Paula's Choice 2% BHA", "La Roche-Posay Effaclar", "Anua Heartleaf Toner"
+];
+
+// Fetch products from Open Beauty Facts API
+async function searchProducts(query) {
+    if (query.length < 2) return [];
+    
+    const lowerQuery = query.toLowerCase();
+    
+    // Check fallback list first for instant results
+    const fallbackResults = FALLBACK_PRODUCTS.filter(p => p.toLowerCase().includes(lowerQuery));
+    
+    // Try Open Beauty Facts API (cosmetics-specific database)
+    const url = `https://world.openbeautyfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=20`;
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const apiProducts = data.products || [];
+        
+        // Filter valid products from API
+        const validApiProducts = apiProducts.filter(p => {
+            const name = p.product_name;
+            // Must have a name, be at least 3 chars, not just numbers, and contain the query
+            return name && 
+                   name.length >= 3 && 
+                   !/^\d+$/.test(name) &&
+                   name.toLowerCase().includes(lowerQuery);
+        });
+        
+        // Combine: fallback first (instant), then API results
+        const combinedResults = [
+            ...fallbackResults.map(name => ({ product_name: name, brands: '', isLocal: true })),
+            ...validApiProducts
+        ];
+        
+        // Remove duplicates based on product name
+        const seen = new Set();
+        const uniqueResults = combinedResults.filter(p => {
+            const name = p.product_name.toLowerCase();
+            if (seen.has(name)) return false;
+            seen.add(name);
+            return true;
+        });
+        
+        return uniqueResults.slice(0, 10); // Limit to 10 results
+        
+    } catch (error) {
+        console.error('API error:', error);
+        // On error, use fallback list only
+        return fallbackResults.map(name => ({ product_name: name, brands: '' }));
+    }
+}
+
+// Setup autocomplete
+const productInput = document.getElementById('productName');
+const autocompleteList = document.getElementById('autocomplete-list');
+
+productInput.addEventListener('input', debounce(async function() {
+    const query = this.value.trim();
+    
+    if (query.length < 2) {
+        autocompleteList.classList.add('hidden');
+        return;
+    }
+    
+    // Show loading state
+    autocompleteList.innerHTML = '<div class="px-4 py-3 text-taupe-400">Searching...</div>';
+    autocompleteList.classList.remove('hidden');
+    
+    const foundProducts = await searchProducts(query);
+    
+    if (foundProducts.length === 0) {
+        autocompleteList.innerHTML = '<div class="px-4 py-3 text-taupe-400">No products found. You can still type your own!</div>';
+        return;
+    }
+    
+    autocompleteList.innerHTML = foundProducts.map(p => {
+        const name = p.product_name;
+        const brand = p.brands || '';
+        return `
+            <div class="px-4 py-3 hover:bg-sand-100 cursor-pointer text-taupe-700 border-b border-sand-100 last:border-0" data-name="${name}${brand ? ' - ' + brand : ''}">
+                <span class="font-medium">${name}</span>
+                ${brand ? `<span class="text-taupe-400 text-sm ml-2">${brand}</span>` : ''}
+            </div>
+        `;
+    }).join('');
+    
+}, 300));
+
+// Handle clicking on a suggestion
+autocompleteList.addEventListener('click', function(e) {
+    const item = e.target.closest('[data-name]');
+    if (item) {
+        productInput.value = item.dataset.name;
+        autocompleteList.classList.add('hidden');
+    }
+});
+
+// Hide dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    if (!productInput.contains(e.target) && !autocompleteList.contains(e.target)) {
+        autocompleteList.classList.add('hidden');
+    }
+});
+
+// Hide dropdown on Escape key
+productInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        autocompleteList.classList.add('hidden');
+    }
+});
+
+// ===== END AUTOCOMPLETE =====
+
 // Handle ingredient selection
 document.querySelectorAll('.ingredient-btn').forEach(btn => {
     btn.addEventListener('click', function() {
@@ -157,7 +290,20 @@ function displayRoutine(elementId, routine) {
     
     routine.forEach((item, index) => {
         const itemDiv = document.createElement('div');
-        itemDiv.className = 'flex items-start gap-4 p-4 bg-white/60 rounded-xl border border-sand-200';
+        // Add amber border if this ingredient conflicts with another in the routine
+        const borderClass = item.alternate ? 'border-amber-300 bg-amber-50/60' : 'border-sand-200 bg-white/60';
+        itemDiv.className = `flex items-start gap-4 p-4 rounded-xl border ${borderClass}`;
+        
+        // Build the alternate nights warning if needed
+        let alternateWarning = '';
+        if (item.alternate && item.conflicts_with.length > 0) {
+            alternateWarning = `
+                <p class="text-xs text-amber-600 mt-2 font-medium bg-amber-100 px-2 py-1 rounded-lg inline-block">
+                     Alternate nights with: ${item.conflicts_with.join(', ')}
+                </p>
+            `;
+        }
+        
         itemDiv.innerHTML = `
             <div class="w-10 h-10 rounded-full bg-gradient-to-br from-taupe-400 to-taupe-600 flex items-center justify-center text-white font-bold flex-shrink-0">
                 ${index + 1}
@@ -165,7 +311,8 @@ function displayRoutine(elementId, routine) {
             <div class="flex-1">
                 <p class="font-semibold text-taupe-700">${item.ingredient}</p>
                 <p class="text-sm text-taupe-500 font-light">${item.product}</p>
-                ${item.wait > 0 ? `<p class="text-xs text-taupe-600 mt-1 font-medium">⏱️ Wait ${item.wait} minutes before next step</p>` : ''}
+                ${item.wait > 0 ? `<p class="text-xs text-taupe-600 mt-1 font-medium">Wait ${item.wait} minutes before next step</p>` : ''}
+                ${alternateWarning}
             </div>
         `;
         div.appendChild(itemDiv);
