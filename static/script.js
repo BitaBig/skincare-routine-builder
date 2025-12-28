@@ -33,11 +33,13 @@ document.getElementById('addProduct').addEventListener('click', function() {
         });
         
         displayProducts();
-        document.getElementById('analyzeRoutine').addEventListener('click', function() {
-            document.getElementById('routinesSection').style.display = 'grid';
-            analyzeRoutine();
-        });
     }
+});
+
+// Analyze routine button
+document.getElementById('analyzeRoutine').addEventListener('click', function() {
+    document.getElementById('routinesSection').style.display = 'grid';
+    analyzeRoutine();
 });
 
 function displayProducts() {
@@ -51,7 +53,7 @@ function displayProducts() {
     list.innerHTML = `
         <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-sand-200">
             <h2 class="text-3xl font-medium text-taupe-700 mb-6 flex items-center gap-3">
-                <span class="text-2xl">🧴</span> Your Products
+                <span class="text-2xl"></span> Your Products
             </h2>
             <div class="space-y-4" id="productItems"></div>
         </div>
@@ -106,7 +108,7 @@ async function analyzeRoutine() {
         conflictsDiv.innerHTML = `
             <div class="bg-amber-50/80 rounded-2xl shadow-lg p-8 border border-amber-200">
                 <h2 class="text-3xl font-medium text-amber-800 mb-6 flex items-center gap-3" style="font-family: 'Cormorant Garamond', serif;">
-                    <span class="text-2xl">⚠️</span> Conflicts Detected
+                    <span class="text-2xl"></span> Conflicts Detected
                 </h2>
                 <div class="space-y-4" id="conflictItems"></div>
             </div>
