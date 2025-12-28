@@ -33,7 +33,10 @@ document.getElementById('addProduct').addEventListener('click', function() {
         });
         
         displayProducts();
-        analyzeRoutine();
+        document.getElementById('analyzeRoutine').addEventListener('click', function() {
+            document.getElementById('routinesSection').style.display = 'grid';
+            analyzeRoutine();
+        });
     }
 });
 
