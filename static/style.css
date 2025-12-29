@@ -30,6 +30,9 @@ input[type="text"] {
     margin-bottom: 15px;
 }
 
+.custom-spacing {
+    letter-spacing: 0.2em;
+}
 .ingredients-grid {
     display: flex;
     flex-wrap: wrap;

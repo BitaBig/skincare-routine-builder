@@ -92,17 +92,21 @@ productInput.addEventListener('input', debounce(async function() {
     const foundProducts = await searchProducts(query);
     
     if (foundProducts.length === 0) {
-        autocompleteList.innerHTML = '<div class="px-4 py-3 text-taupe-400">No products found. You can still type your own!</div>';
+        autocompleteList.innerHTML = '<div class="px-5 py-4 text-stone-400 text-sm">No products found. You can still type your own!</div>';
         return;
     }
     
     autocompleteList.innerHTML = foundProducts.map(p => {
         const name = p.product_name;
         const brand = p.brands || '';
+        
+        // Escape quotes in name for data attribute
+        const safeName = (name + (brand ? ' - ' + brand : '')).replace(/"/g, '&quot;');
+        
         return `
-            <div class="px-4 py-3 hover:bg-sand-100 cursor-pointer text-taupe-700 border-b border-sand-100 last:border-0" data-name="${name}${brand ? ' - ' + brand : ''}">
-                <span class="font-medium">${name}</span>
-                ${brand ? `<span class="text-taupe-400 text-sm ml-2">${brand}</span>` : ''}
+            <div class="px-5 py-4 hover:bg-sage-50 cursor-pointer text-stone-700 border-b border-sage-100 last:border-0 transition-colors" data-name="${safeName}">
+                <p class="font-medium text-sm">${name}</p>
+                ${brand ? `<p class="text-stone-400 text-xs">${brand}</p>` : ''}
             </div>
         `;
     }).join('');
@@ -184,11 +188,11 @@ function displayProducts() {
     }
     
     list.innerHTML = `
-        <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-sand-200">
-            <h2 class="text-3xl font-medium text-taupe-700 mb-6 flex items-center gap-3">
-                <span class="text-2xl"></span> Your Products
-            </h2>
-            <div class="space-y-4" id="productItems"></div>
+        <div class="card rounded-3xl p-6 shadow-sm border border-sage-100">
+            <div class="flex items-center justify-between mb-4">
+                <span class="bg-sage-200 text-sage-700 text-xs font-medium px-3 py-1.5 rounded-full">Your products</span>
+            </div>
+            <div class="space-y-3" id="productItems"></div>
         </div>
     `;
     
@@ -196,15 +200,15 @@ function displayProducts() {
     
     products.forEach((product, index) => {
         const div = document.createElement('div');
-        div.className = 'flex items-center justify-between p-4 bg-gradient-to-r from-sand-50 to-cream-100 rounded-xl border border-sand-200';
+        div.className = 'flex items-center justify-between p-4 bg-sage-50 rounded-2xl';
         div.innerHTML = `
             <div>
-                <h3 class="font-semibold text-taupe-700">${product.name}</h3>
-                <p class="text-sm text-taupe-500 mt-1">${product.ingredients.join(' • ')}</p>
+                <h3 class="font-medium text-stone-700 text-sm">${product.name}</h3>
+                <p class="text-xs text-stone-400 mt-1">${product.ingredients.join(' • ')}</p>
             </div>
             <button 
                 onclick="removeProduct(${index})" 
-                class="px-4 py-2 rounded-lg bg-sand-200 hover:bg-sand-300 text-taupe-600 font-medium transition-colors"
+                class="px-4 py-2 rounded-full bg-white hover:bg-sage-100 text-stone-600 text-xs font-medium transition-all border border-sage-200"
             >
                 Remove
             </button>
@@ -222,8 +226,8 @@ function removeProduct(index) {
 async function analyzeRoutine() {
     if (products.length === 0) {
         document.getElementById('conflicts').innerHTML = '';
-        document.getElementById('amRoutine').innerHTML = '<p class="text-taupe-400 text-center py-8 font-light">Add products to see your routine</p>';
-        document.getElementById('pmRoutine').innerHTML = '<p class="text-taupe-400 text-center py-8 font-light">Add products to see your routine</p>';
+        document.getElementById('amRoutine').innerHTML = '<p class="text-stone-400 text-center py-6 text-sm font-light">Add products to see your routine</p>';
+        document.getElementById('pmRoutine').innerHTML = '<p class="text-stone-400 text-center py-6 text-sm font-light">Add products to see your routine</p>';
         return;
     }
     
@@ -239,31 +243,31 @@ async function analyzeRoutine() {
     const conflictsDiv = document.getElementById('conflicts');
     if (data.conflicts.length > 0) {
         conflictsDiv.innerHTML = `
-            <div class="bg-amber-50/80 rounded-2xl shadow-lg p-8 border border-amber-200">
-                <h2 class="text-3xl font-medium text-amber-800 mb-6 flex items-center gap-3" style="font-family: 'Cormorant Garamond', serif;">
-                    <span class="text-2xl"></span> Conflicts Detected
-                </h2>
-                <div class="space-y-4" id="conflictItems"></div>
+            <div class="card rounded-3xl p-6 shadow-sm border border-amber-200 bg-amber-50/50">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="bg-amber-200 text-amber-800 text-xs font-medium px-3 py-1.5 rounded-full">⚠️ Conflicts detected</span>
+                </div>
+                <div class="space-y-3" id="conflictItems"></div>
             </div>
         `;
         
         const conflictItems = document.getElementById('conflictItems');
         data.conflicts.forEach(conflict => {
             const div = document.createElement('div');
-            div.className = 'p-4 bg-white/80 rounded-xl border border-amber-200';
+            div.className = 'p-4 bg-white/60 rounded-2xl border border-amber-100';
             
             const severityColors = {
-                high: 'bg-amber-600',
-                medium: 'bg-amber-500',
-                low: 'bg-amber-400'
+                high: 'bg-red-400',
+                medium: 'bg-amber-400',
+                low: 'bg-yellow-400'
             };
             
             div.innerHTML = `
                 <div class="flex items-start gap-3">
-                    <span class="w-2 h-2 rounded-full ${severityColors[conflict.severity] || 'bg-amber-500'} mt-2 flex-shrink-0"></span>
+                    <span class="w-2 h-2 rounded-full ${severityColors[conflict.severity] || 'bg-amber-400'} mt-2 flex-shrink-0"></span>
                     <div>
-                        <p class="font-semibold text-taupe-700">${conflict.pair[0]} + ${conflict.pair[1]}</p>
-                        <p class="text-taupe-600 text-sm mt-1 font-light">${conflict.reason}</p>
+                        <p class="font-medium text-stone-700 text-sm">${conflict.pair[0]} + ${conflict.pair[1]}</p>
+                        <p class="text-stone-500 text-xs mt-1 font-light">${conflict.reason}</p>
                     </div>
                 </div>
             `;
@@ -282,7 +286,7 @@ function displayRoutine(elementId, routine) {
     const div = document.getElementById(elementId);
     
     if (routine.length === 0) {
-        div.innerHTML = '<p class="text-taupe-400 text-center py-8 font-light">No products for this routine</p>';
+        div.innerHTML = '<p class="text-stone-400 text-center py-6 text-sm font-light">No products for this routine</p>';
         return;
     }
     
@@ -291,27 +295,27 @@ function displayRoutine(elementId, routine) {
     routine.forEach((item, index) => {
         const itemDiv = document.createElement('div');
         // Add amber border if this ingredient conflicts with another in the routine
-        const borderClass = item.alternate ? 'border-amber-300 bg-amber-50/60' : 'border-sand-200 bg-white/60';
-        itemDiv.className = `flex items-start gap-4 p-4 rounded-xl border ${borderClass}`;
+        const borderClass = item.alternate ? 'border-amber-200 bg-amber-50/50' : 'border-sage-100 bg-sage-50/50';
+        itemDiv.className = `flex items-start gap-4 p-4 rounded-2xl border ${borderClass}`;
         
         // Build the alternate nights warning if needed
         let alternateWarning = '';
         if (item.alternate && item.conflicts_with.length > 0) {
             alternateWarning = `
-                <p class="text-xs text-amber-600 mt-2 font-medium bg-amber-100 px-2 py-1 rounded-lg inline-block">
-                     Alternate nights with: ${item.conflicts_with.join(', ')}
+                <p class="text-xs text-amber-700 mt-2 font-medium bg-amber-100 px-3 py-1.5 rounded-full inline-block">
+                    ↻ Alternate nights with: ${item.conflicts_with.join(', ')}
                 </p>
             `;
         }
         
         itemDiv.innerHTML = `
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-taupe-400 to-taupe-600 flex items-center justify-center text-white font-bold flex-shrink-0">
+            <div class="w-8 h-8 rounded-full bg-sage-600 flex items-center justify-center text-white text-sm font-medium flex-shrink-0">
                 ${index + 1}
             </div>
             <div class="flex-1">
-                <p class="font-semibold text-taupe-700">${item.ingredient}</p>
-                <p class="text-sm text-taupe-500 font-light">${item.product}</p>
-                ${item.wait > 0 ? `<p class="text-xs text-taupe-600 mt-1 font-medium">Wait ${item.wait} minutes before next step</p>` : ''}
+                <p class="font-medium text-stone-700 text-sm">${item.ingredient}</p>
+                <p class="text-xs text-stone-400 font-light">${item.product}</p>
+                ${item.wait > 0 ? `<p class="text-xs text-sage-600 mt-1 font-medium">Wait ${item.wait} min</p>` : ''}
                 ${alternateWarning}
             </div>
         `;
