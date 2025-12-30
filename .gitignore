@@ -25,3 +25,6 @@ instance/
 .env
 .flaskenv
 
+# Firebase config (contains API keys)
+static/firebase-config.js
+

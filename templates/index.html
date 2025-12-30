@@ -160,6 +160,85 @@
     </style>
 </head>
 <body class="min-h-screen">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="{{ url_for('static', filename='firebase-config.js') }}"></script>
+    <script>
+        // Initialize Firebase after config loads
+        if (typeof firebaseConfig !== 'undefined') {
+            firebase.initializeApp(firebaseConfig);
+        }
+    </script>
+
+    <!-- Sign In Modal -->
+    <div id="authModal" class="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
+        <div class="card rounded-3xl p-8 max-w-md w-full mx-5 shadow-xl border border-sage-100">
+            <div class="text-center mb-8">
+                <h2 class="text-4xl font-medium text-stone-800 tracking-wide mb-2" style="font-family: 'Cormorant', serif; letter-spacing: 0.2em;">
+                    LUMIQ
+                </h2>
+                <p class="text-stone-500 text-sm">Sign in to save your routines</p>
+            </div>
+
+            <div id="authError" class="hidden mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm"></div>
+
+            <!-- Sign In Form -->
+            <div id="signInForm">
+                <input 
+                    type="email" 
+                    id="signInEmail" 
+                    placeholder="Email"
+                    class="w-full px-5 py-4 rounded-2xl bg-sage-50 border border-sage-200 focus:border-sage-400 focus:outline-none mb-4 text-stone-700 placeholder-stone-400 font-light text-sm"
+                >
+                <input 
+                    type="password" 
+                    id="signInPassword" 
+                    placeholder="Password"
+                    class="w-full px-5 py-4 rounded-2xl bg-sage-50 border border-sage-200 focus:border-sage-400 focus:outline-none mb-4 text-stone-700 placeholder-stone-400 font-light text-sm"
+                >
+                <button 
+                    onclick="handleSignIn()"
+                    class="btn-primary w-full py-4 rounded-2xl bg-sage-600 text-white font-medium text-sm tracking-wide mb-4"
+                >
+                    Sign In
+                </button>
+                <p class="text-center text-stone-500 text-sm">
+                    Don't have an account? 
+                    <a href="#" onclick="showSignUpForm()" class="text-sage-600 hover:underline">Sign up</a>
+                </p>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div id="signUpForm" class="hidden">
+                <input 
+                    type="email" 
+                    id="signUpEmail" 
+                    placeholder="Email"
+                    class="w-full px-5 py-4 rounded-2xl bg-sage-50 border border-sage-200 focus:border-sage-400 focus:outline-none mb-4 text-stone-700 placeholder-stone-400 font-light text-sm"
+                >
+                <input 
+                    type="password" 
+                    id="signUpPassword" 
+                    placeholder="Password (min 6 characters)"
+                    class="w-full px-5 py-4 rounded-2xl bg-sage-50 border border-sage-200 focus:border-sage-400 focus:outline-none mb-4 text-stone-700 placeholder-stone-400 font-light text-sm"
+                >
+                <button 
+                    onclick="handleSignUp()"
+                    class="btn-primary w-full py-4 rounded-2xl bg-sage-600 text-white font-medium text-sm tracking-wide mb-4"
+                >
+                    Sign Up
+                </button>
+                <p class="text-center text-stone-500 text-sm">
+                    Already have an account? 
+                    <a href="#" onclick="showSignInForm()" class="text-sage-600 hover:underline">Sign in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App (hidden until signed in) -->
+    <div id="mainApp" class="hidden">
     <div class="max-w-2xl mx-auto px-5 py-12">
         
         <!-- Header -->
@@ -269,7 +348,87 @@
             <p>SKINGLO®</p>
         </div>
     </div>
+    </div> <!-- End mainApp -->
 
+    <!-- User Info (when signed in) -->
+    <div id="userInfo" class="fixed top-5 right-5 hidden">
+        <div class="flex items-center gap-3">
+            <span id="userEmail" class="text-stone-600 text-sm"></span>
+            <button 
+                onclick="handleSignOut()"
+                class="px-4 py-2 rounded-full bg-white/80 text-stone-600 text-sm border border-sage-200 hover:bg-sage-50"
+            >
+                Sign Out
+            </button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='auth.js') }}"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    
+    <script>
+        // Helper functions for auth modal
+        async function handleSignIn() {
+            const email = document.getElementById('signInEmail').value;
+            const password = document.getElementById('signInPassword').value;
+            const errorDiv = document.getElementById('authError');
+            
+            if (!email || !password) {
+                errorDiv.textContent = 'Please enter email and password';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            const result = await signIn(email, password);
+            if (result.success) {
+                errorDiv.classList.add('hidden');
+            } else {
+                errorDiv.textContent = result.error;
+                errorDiv.classList.remove('hidden');
+            }
+        }
+        
+        async function handleSignUp() {
+            const email = document.getElementById('signUpEmail').value;
+            const password = document.getElementById('signUpPassword').value;
+            const errorDiv = document.getElementById('authError');
+            
+            if (!email || !password) {
+                errorDiv.textContent = 'Please enter email and password';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            if (password.length < 6) {
+                errorDiv.textContent = 'Password must be at least 6 characters';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            const result = await signUp(email, password);
+            if (result.success) {
+                errorDiv.classList.add('hidden');
+            } else {
+                errorDiv.textContent = result.error;
+                errorDiv.classList.remove('hidden');
+            }
+        }
+        
+        function handleSignOut() {
+            signOut();
+        }
+        
+        function showSignUpForm() {
+            document.getElementById('signInForm').classList.add('hidden');
+            document.getElementById('signUpForm').classList.remove('hidden');
+            document.getElementById('authError').classList.add('hidden');
+        }
+        
+        function showSignInForm() {
+            document.getElementById('signUpForm').classList.add('hidden');
+            document.getElementById('signInForm').classList.remove('hidden');
+            document.getElementById('authError').classList.add('hidden');
+        }
+    </script>
 </body>
 </html>
