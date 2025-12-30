@@ -2,15 +2,8 @@
 
 A web app that helps you build the perfect AM & PM skincare routine with ingredient conflict detection.
 
-## Screenshots
+<img width="439" height="382" alt="Screenshot 2025-12-29 at 9 15 23 PM" src="https://github.com/user-attachments/assets/c1857850-ab20-41ca-98d7-ec2b755abfc7" /> <img width="702" height="748" alt="Screenshot 2025-12-29 at 9 14 51 PM" src="https://github.com/user-attachments/assets/5d26d546-e13d-42b7-933a-c0a023f09512" />
 
-### Authentication
-
-![Sign In Modal](static/images/auth-modal.png)
-
-### Main Application
-
-![Main App Interface](static/images/main-app.png)
 
 ## Features
 
