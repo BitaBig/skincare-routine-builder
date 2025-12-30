@@ -2,6 +2,16 @@
 
 A web app that helps you build the perfect AM & PM skincare routine with ingredient conflict detection.
 
+## Screenshots
+
+### Authentication
+
+![Sign In Modal](static/images/auth-modal.png)
+
+### Main Application
+
+![Main App Interface](static/images/main-app.png)
+
 ## Features
 
 - **Add Products** - Input your skincare products and their active ingredients
